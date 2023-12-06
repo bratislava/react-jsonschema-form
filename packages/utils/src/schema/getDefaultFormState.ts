@@ -20,6 +20,7 @@ import mergeDefaultsWithFormData from '../mergeDefaultsWithFormData';
 import mergeObjects from '../mergeObjects';
 import mergeSchemas from '../mergeSchemas';
 import {
+  Experimental_ArrayMinItems,
   Experimental_DefaultFormStateBehavior,
   FormContextType,
   GenericObjectType,
@@ -36,6 +37,12 @@ export enum AdditionalItemsHandling {
   Ignore,
   Invert,
   Fallback,
+}
+
+declare module 'json-schema' {
+  export interface JSONSchema7 {
+    overrideArrayMinItemsBehaviour?: Experimental_ArrayMinItems;
+  }
 }
 
 /** Given a `schema` will return an inner schema that for an array item. This is computed differently based on the
@@ -338,8 +345,11 @@ export function computeDefaults<T = any, S extends StrictRJSFSchema = RJSFSchema
       return objectDefaults;
     }
     case 'array': {
-      const neverPopulate = experimental_defaultFormStateBehavior?.arrayMinItems?.populate === 'never';
-      const ignoreMinItemsFlagSet = experimental_defaultFormStateBehavior?.arrayMinItems?.populate === 'requiredOnly';
+      // On a case by case basis, we may want to override the default behavior of populating array items.
+      const arrayMinItems =
+        schema.overrideArrayMinItemsBehaviour ?? experimental_defaultFormStateBehavior?.arrayMinItems;
+      const neverPopulate = arrayMinItems?.populate === 'never';
+      const ignoreMinItemsFlagSet = arrayMinItems?.populate === 'requiredOnly';
 
       // Inject defaults into existing array defaults
       if (Array.isArray(defaults)) {
@@ -453,7 +463,10 @@ export default function getDefaultFormState<
     // No form data? Use schema defaults.
     return defaults;
   }
-  const { mergeExtraDefaults } = experimental_defaultFormStateBehavior?.arrayMinItems || {};
+  // On a case by case basis, we may want to override the default behavior of populating array items.
+  const arrayMinItems = schema.overrideArrayMinItemsBehaviour ?? experimental_defaultFormStateBehavior?.arrayMinItems;
+
+  const { mergeExtraDefaults } = arrayMinItems || {};
   if (isObject(formData)) {
     return mergeDefaultsWithFormData<T>(defaults as T, formData, mergeExtraDefaults);
   }
