@@ -456,7 +456,8 @@ export function retrieveSchemaInternal<
     rootSchema,
     expandAllBranches,
     recurseList,
-    rawFormData
+    rawFormData,
+    experimental_customMergeAllOf
   );
   return resolvedSchemas.flatMap((s: S) => {
     let resolvedSchema = s;

@@ -9,6 +9,7 @@ import {
   StrictRJSFSchema,
   UiSchema,
   ValidatorType,
+  Experimental_CustomMergeAllOf,
 } from '../types';
 import isFilesArray from './isFilesArray';
 import isMultiSelect from './isMultiSelect';
@@ -32,7 +33,8 @@ export default function getDisplayLabel<
   schema: S,
   uiSchema: UiSchema<T, S, F> = {},
   rootSchema?: S,
-  globalOptions?: GlobalUISchemaOptions
+  globalOptions?: GlobalUISchemaOptions,
+  experimental_customMergeAllOf?: Experimental_CustomMergeAllOf<S>
 ): boolean {
   const uiOptions = getUiOptions<T, S, F>(uiSchema, globalOptions);
   const { label = true } = uiOptions;
@@ -41,8 +43,8 @@ export default function getDisplayLabel<
 
   if (schemaType === 'array') {
     displayLabel =
-      isMultiSelect<T, S, F>(validator, schema, rootSchema) ||
-      isFilesArray<T, S, F>(validator, schema, uiSchema, rootSchema) ||
+      isMultiSelect<T, S, F>(validator, schema, rootSchema, experimental_customMergeAllOf) ||
+      isFilesArray<T, S, F>(validator, schema, uiSchema, rootSchema, experimental_customMergeAllOf) ||
       isCustomWidget(uiSchema);
   }
 

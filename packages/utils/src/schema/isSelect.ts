@@ -1,5 +1,5 @@
 import isConstant from '../isConstant';
-import { FormContextType, RJSFSchema, StrictRJSFSchema, ValidatorType } from '../types';
+import { FormContextType, RJSFSchema, StrictRJSFSchema, ValidatorType, Experimental_CustomMergeAllOf } from '../types';
 import retrieveSchema from './retrieveSchema';
 
 /** Checks to see if the `schema` combination represents a select
@@ -12,9 +12,10 @@ import retrieveSchema from './retrieveSchema';
 export default function isSelect<T = any, S extends StrictRJSFSchema = RJSFSchema, F extends FormContextType = any>(
   validator: ValidatorType<T, S, F>,
   theSchema: S,
-  rootSchema: S = {} as S
+  rootSchema: S = {} as S,
+  experimental_customMergeAllOf?: Experimental_CustomMergeAllOf<S>
 ) {
-  const schema = retrieveSchema<T, S, F>(validator, theSchema, rootSchema, undefined);
+  const schema = retrieveSchema<T, S, F>(validator, theSchema, rootSchema, undefined, experimental_customMergeAllOf);
   const altSchemas = schema.oneOf || schema.anyOf;
   if (Array.isArray(schema.enum)) {
     return true;

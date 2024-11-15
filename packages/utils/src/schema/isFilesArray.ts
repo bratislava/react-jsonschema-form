@@ -1,5 +1,12 @@
 import { UI_WIDGET_KEY } from '../constants';
-import { FormContextType, RJSFSchema, StrictRJSFSchema, UiSchema, ValidatorType } from '../types';
+import {
+  Experimental_CustomMergeAllOf,
+  FormContextType,
+  RJSFSchema,
+  StrictRJSFSchema,
+  UiSchema,
+  ValidatorType,
+} from '../types';
 import retrieveSchema from './retrieveSchema';
 
 /** Checks to see if the `schema` and `uiSchema` combination represents an array of files
@@ -14,13 +21,20 @@ export default function isFilesArray<T = any, S extends StrictRJSFSchema = RJSFS
   validator: ValidatorType<T, S, F>,
   schema: S,
   uiSchema: UiSchema<T, S, F> = {},
-  rootSchema?: S
+  rootSchema?: S,
+  experimental_customMergeAllOf?: Experimental_CustomMergeAllOf<S>
 ) {
   if (uiSchema[UI_WIDGET_KEY] === 'files') {
     return true;
   }
   if (schema.items) {
-    const itemsSchema = retrieveSchema<T, S, F>(validator, schema.items as S, rootSchema);
+    const itemsSchema = retrieveSchema<T, S, F>(
+      validator,
+      schema.items as S,
+      rootSchema,
+      undefined,
+      experimental_customMergeAllOf
+    );
     return itemsSchema.type === 'string' && itemsSchema.format === 'data-url';
   }
   return false;

@@ -199,7 +199,7 @@ class SchemaUtils<T = any, S extends StrictRJSFSchema = RJSFSchema, F extends Fo
    * @returns - True if schema/uiSchema contains an array of files, otherwise false
    */
   isFilesArray(schema: S, uiSchema?: UiSchema<T, S, F>) {
-    return isFilesArray<T, S, F>(this.validator, schema, uiSchema, this.rootSchema);
+    return isFilesArray<T, S, F>(this.validator, schema, uiSchema, this.rootSchema, this.experimental_customMergeAllOf);
   }
 
   /** Checks to see if the `schema` combination represents a multi-select
@@ -208,7 +208,7 @@ class SchemaUtils<T = any, S extends StrictRJSFSchema = RJSFSchema, F extends Fo
    * @returns - True if schema contains a multi-select, otherwise false
    */
   isMultiSelect(schema: S) {
-    return isMultiSelect<T, S, F>(this.validator, schema, this.rootSchema);
+    return isMultiSelect<T, S, F>(this.validator, schema, this.rootSchema, this.experimental_customMergeAllOf);
   }
 
   /** Checks to see if the `schema` combination represents a select
@@ -217,7 +217,7 @@ class SchemaUtils<T = any, S extends StrictRJSFSchema = RJSFSchema, F extends Fo
    * @returns - True if schema contains a select, otherwise false
    */
   isSelect(schema: S) {
-    return isSelect<T, S, F>(this.validator, schema, this.rootSchema);
+    return isSelect<T, S, F>(this.validator, schema, this.rootSchema, this.experimental_customMergeAllOf);
   }
 
   /** Merges the errors in `additionalErrorSchema` into the existing `validationData` by combining the hierarchies in
@@ -298,7 +298,14 @@ class SchemaUtils<T = any, S extends StrictRJSFSchema = RJSFSchema, F extends Fo
    * @returns - The `PathSchema` object for the `schema`
    */
   toPathSchema(schema: S, name?: string, formData?: T): PathSchema<T> {
-    return toPathSchema<T, S, F>(this.validator, schema, name, this.rootSchema, formData);
+    return toPathSchema<T, S, F>(
+      this.validator,
+      schema,
+      name,
+      this.rootSchema,
+      formData,
+      this.experimental_customMergeAllOf
+    );
   }
 }
 

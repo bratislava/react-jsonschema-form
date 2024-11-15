@@ -15,7 +15,15 @@ import {
   RJSF_ADDITIONAL_PROPERTIES_FLAG,
 } from '../constants';
 import getDiscriminatorFieldFromSchema from '../getDiscriminatorFieldFromSchema';
-import { FormContextType, GenericObjectType, PathSchema, RJSFSchema, StrictRJSFSchema, ValidatorType } from '../types';
+import {
+  Experimental_CustomMergeAllOf,
+  FormContextType,
+  GenericObjectType,
+  PathSchema,
+  RJSFSchema,
+  StrictRJSFSchema,
+  ValidatorType,
+} from '../types';
 import getClosestMatchingOption from './getClosestMatchingOption';
 import retrieveSchema from './retrieveSchema';
 
@@ -36,10 +44,11 @@ function toPathSchemaInternal<T = any, S extends StrictRJSFSchema = RJSFSchema, 
   name: string,
   rootSchema?: S,
   formData?: T,
-  _recurseList: S[] = []
+  _recurseList: S[] = [],
+  experimental_customMergeAllOf?: Experimental_CustomMergeAllOf<S>
 ): PathSchema<T> {
   if (REF_KEY in schema || DEPENDENCIES_KEY in schema || ALL_OF_KEY in schema) {
-    const _schema = retrieveSchema<T, S, F>(validator, schema, rootSchema, formData);
+    const _schema = retrieveSchema<T, S, F>(validator, schema, rootSchema, formData, experimental_customMergeAllOf);
     const sameSchemaIndex = _recurseList.findIndex((item) => isEqual(item, _schema));
     if (sameSchemaIndex === -1) {
       return toPathSchemaInternal<T, S, F>(
@@ -48,7 +57,8 @@ function toPathSchemaInternal<T = any, S extends StrictRJSFSchema = RJSFSchema, 
         name,
         rootSchema,
         formData,
-        _recurseList.concat(_schema)
+        _recurseList.concat(_schema),
+        experimental_customMergeAllOf
       );
     }
   }
@@ -64,7 +74,15 @@ function toPathSchemaInternal<T = any, S extends StrictRJSFSchema = RJSFSchema, 
     const _schema: S = xxxOf![index] as S;
     pathSchema = {
       ...pathSchema,
-      ...toPathSchemaInternal<T, S, F>(validator, _schema, name, rootSchema, formData, _recurseList),
+      ...toPathSchemaInternal<T, S, F>(
+        validator,
+        _schema,
+        name,
+        rootSchema,
+        formData,
+        _recurseList,
+        experimental_customMergeAllOf
+      ),
     };
   }
 
@@ -84,7 +102,8 @@ function toPathSchemaInternal<T = any, S extends StrictRJSFSchema = RJSFSchema, 
             `${name}.${i}`,
             rootSchema,
             element,
-            _recurseList
+            _recurseList,
+            experimental_customMergeAllOf
           );
         } else if (schemaAdditionalItems) {
           (pathSchema as PathSchema<T[]>)[i] = toPathSchemaInternal<T, S, F>(
@@ -93,7 +112,8 @@ function toPathSchemaInternal<T = any, S extends StrictRJSFSchema = RJSFSchema, 
             `${name}.${i}`,
             rootSchema,
             element,
-            _recurseList
+            _recurseList,
+            experimental_customMergeAllOf
           );
         } else {
           console.warn(`Unable to generate path schema for "${name}.${i}". No schema defined for it`);
@@ -107,7 +127,8 @@ function toPathSchemaInternal<T = any, S extends StrictRJSFSchema = RJSFSchema, 
           `${name}.${i}`,
           rootSchema,
           element,
-          _recurseList
+          _recurseList,
+          experimental_customMergeAllOf
         );
       });
     }
@@ -122,7 +143,8 @@ function toPathSchemaInternal<T = any, S extends StrictRJSFSchema = RJSFSchema, 
         // It's possible that formData is not an object -- this can happen if an
         // array item has just been added, but not populated with data yet
         get(formData, [property]),
-        _recurseList
+        _recurseList,
+        experimental_customMergeAllOf
       );
     }
   }
@@ -143,7 +165,8 @@ export default function toPathSchema<T = any, S extends StrictRJSFSchema = RJSFS
   schema: S,
   name = '',
   rootSchema?: S,
-  formData?: T
+  formData?: T,
+  experimental_customMergeAllOf?: Experimental_CustomMergeAllOf<S>
 ): PathSchema<T> {
-  return toPathSchemaInternal(validator, schema, name, rootSchema, formData);
+  return toPathSchemaInternal(validator, schema, name, rootSchema, formData, undefined, experimental_customMergeAllOf);
 }
