@@ -371,7 +371,13 @@ export function stubExistingAdditionalProperties<
   T = any,
   S extends StrictRJSFSchema = RJSFSchema,
   F extends FormContextType = any
->(validator: ValidatorType<T, S, F>, theSchema: S, rootSchema?: S, aFormData?: T): S {
+>(
+  validator: ValidatorType<T, S, F>,
+  theSchema: S,
+  rootSchema?: S,
+  aFormData?: T,
+  experimental_customMergeAllOf?: Experimental_CustomMergeAllOf<S>
+): S {
   // Clone the schema so that we don't ruin the consumer's original
   const schema = {
     ...theSchema,
@@ -393,7 +399,8 @@ export function stubExistingAdditionalProperties<
           validator,
           { $ref: get(schema.additionalProperties, [REF_KEY]) } as S,
           rootSchema,
-          formData as T
+          formData as T,
+          experimental_customMergeAllOf
         );
       } else if ('type' in schema.additionalProperties!) {
         additionalProperties = { ...schema.additionalProperties };
@@ -508,7 +515,13 @@ export function retrieveSchemaInternal<
     const hasAdditionalProperties =
       ADDITIONAL_PROPERTIES_KEY in resolvedSchema && resolvedSchema.additionalProperties !== false;
     if (hasAdditionalProperties) {
-      return stubExistingAdditionalProperties<T, S, F>(validator, resolvedSchema, rootSchema, rawFormData as T);
+      return stubExistingAdditionalProperties<T, S, F>(
+        validator,
+        resolvedSchema,
+        rootSchema,
+        rawFormData as T,
+        experimental_customMergeAllOf
+      );
     }
 
     return resolvedSchema;

@@ -70,7 +70,15 @@ function toPathSchemaInternal<T = any, S extends StrictRJSFSchema = RJSFSchema, 
   if (ONE_OF_KEY in schema || ANY_OF_KEY in schema) {
     const xxxOf: S[] = ONE_OF_KEY in schema ? (schema.oneOf as S[]) : (schema.anyOf as S[]);
     const discriminator = getDiscriminatorFieldFromSchema<S>(schema);
-    const index = getClosestMatchingOption<T, S, F>(validator, rootSchema!, formData, xxxOf, 0, discriminator);
+    const index = getClosestMatchingOption<T, S, F>(
+      validator,
+      rootSchema!,
+      formData,
+      xxxOf,
+      0,
+      discriminator,
+      experimental_customMergeAllOf
+    );
     const _schema: S = xxxOf![index] as S;
     pathSchema = {
       ...pathSchema,

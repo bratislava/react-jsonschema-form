@@ -258,7 +258,8 @@ export function computeDefaults<T = any, S extends StrictRJSFSchema = RJSFSchema
         isEmpty(formData) ? undefined : formData,
         oneOf as S[],
         0,
-        discriminator
+        discriminator,
+        experimental_customMergeAllOf
       )
     ] as S;
     schemaToCompute = mergeSchemas(remaining, schemaToCompute) as S;
@@ -275,7 +276,8 @@ export function computeDefaults<T = any, S extends StrictRJSFSchema = RJSFSchema
         isEmpty(formData) ? undefined : formData,
         anyOf as S[],
         0,
-        discriminator
+        discriminator,
+        experimental_customMergeAllOf
       )
     ] as S;
     schemaToCompute = mergeSchemas(remaining, schemaToCompute) as S;

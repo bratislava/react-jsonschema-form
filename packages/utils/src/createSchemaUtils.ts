@@ -168,7 +168,8 @@ class SchemaUtils<T = any, S extends StrictRJSFSchema = RJSFSchema, F extends Fo
       formData,
       options,
       selectedOption,
-      discriminatorField
+      discriminatorField,
+      this.experimental_customMergeAllOf
     );
   }
 
@@ -272,7 +273,14 @@ class SchemaUtils<T = any, S extends StrictRJSFSchema = RJSFSchema, F extends Fo
    *      to `undefined`. Will return `undefined` if the new schema is not an object containing properties.
    */
   sanitizeDataForNewSchema(newSchema?: S, oldSchema?: S, data?: any): T {
-    return sanitizeDataForNewSchema(this.validator, this.rootSchema, newSchema, oldSchema, data);
+    return sanitizeDataForNewSchema(
+      this.validator,
+      this.rootSchema,
+      newSchema,
+      oldSchema,
+      data,
+      this.experimental_customMergeAllOf
+    );
   }
 
   /** Generates an `IdSchema` object for the `schema`, recursively
