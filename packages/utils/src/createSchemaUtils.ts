@@ -133,7 +133,14 @@ class SchemaUtils<T = any, S extends StrictRJSFSchema = RJSFSchema, F extends Fo
    * @returns - True if the label should be displayed or false if it should not
    */
   getDisplayLabel(schema: S, uiSchema?: UiSchema<T, S, F>, globalOptions?: GlobalUISchemaOptions) {
-    return getDisplayLabel<T, S, F>(this.validator, schema, uiSchema, this.rootSchema, globalOptions);
+    return getDisplayLabel<T, S, F>(
+      this.validator,
+      schema,
+      uiSchema,
+      this.rootSchema,
+      globalOptions,
+      this.experimental_customMergeAllOf
+    );
   }
 
   /** Determines which of the given `options` provided most closely matches the `formData`.
