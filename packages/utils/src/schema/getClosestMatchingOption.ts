@@ -155,6 +155,7 @@ export function calculateIndexScore<T = any, S extends StrictRJSFSchema = RJSFSc
  * @param [selectedOption=-1] - The index of the currently selected option, defaulted to -1 if not specified
  * @param [discriminatorField] - The optional name of the field within the options object whose value is used to
  *          determine which option is selected
+ * @param [experimental_customMergeAllOf] - Optional function that allows for custom merging of `allOf` schemas
  * @returns - The index of the option that is the closest match to the `formData` or the `selectedOption` if no match
  */
 export default function getClosestMatchingOption<

@@ -36,6 +36,7 @@ import retrieveSchema from './retrieveSchema';
  * @param [rootSchema] - The root schema, used to primarily to look up `$ref`s
  * @param [formData] - The current formData, if any, to assist retrieving a schema
  * @param [_recurseList=[]] - The list of retrieved schemas currently being recursed, used to prevent infinite recursion
+ * @param [experimental_customMergeAllOf] - Optional function that allows for custom merging of `allOf` schemas
  * @returns - The `PathSchema` object for the `schema`
  */
 function toPathSchemaInternal<T = any, S extends StrictRJSFSchema = RJSFSchema, F extends FormContextType = any>(
@@ -166,6 +167,7 @@ function toPathSchemaInternal<T = any, S extends StrictRJSFSchema = RJSFSchema, 
  * @param [name=''] - The base name for the schema
  * @param [rootSchema] - The root schema, used to primarily to look up `$ref`s
  * @param [formData] - The current formData, if any, to assist retrieving a schema
+ * @param [experimental_customMergeAllOf] - Optional function that allows for custom merging of `allOf` schemas
  * @returns - The `PathSchema` object for the `schema`
  */
 export default function toPathSchema<T = any, S extends StrictRJSFSchema = RJSFSchema, F extends FormContextType = any>(

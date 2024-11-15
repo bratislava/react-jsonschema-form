@@ -7,6 +7,7 @@ import isSelect from './isSelect';
  * @param validator - An implementation of the `ValidatorType` interface that will be used when necessary
  * @param schema - The schema for which check for a multi-select flag is desired
  * @param [rootSchema] - The root schema, used to primarily to look up `$ref`s
+ * @param [experimental_customMergeAllOf] - Optional function that allows for custom merging of `allOf` schemas
  * @returns - True if schema contains a multi-select, otherwise false
  */
 export default function isMultiSelect<

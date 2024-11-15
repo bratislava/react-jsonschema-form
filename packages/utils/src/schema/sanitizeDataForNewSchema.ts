@@ -58,6 +58,7 @@ const NO_VALUE = Symbol('no Value');
  * @param [newSchema] - The new schema for which the data is being sanitized
  * @param [oldSchema] - The old schema from which the data originated
  * @param [data={}] - The form data associated with the schema, defaulting to an empty object when undefined
+ * @param [experimental_customMergeAllOf] - Optional function that allows for custom merging of `allOf` schemas
  * @returns - The new form data, with all the fields uniquely associated with the old schema set
  *      to `undefined`. Will return `undefined` if the new schema is not an object containing properties.
  */
@@ -181,10 +182,22 @@ export default function sanitizeDataForNewSchema<
       !Array.isArray(newSchemaItems)
     ) {
       if (has(oldSchemaItems, REF_KEY)) {
-        oldSchemaItems = retrieveSchema<T, S, F>(validator, oldSchemaItems as S, rootSchema, data as T);
+        oldSchemaItems = retrieveSchema<T, S, F>(
+          validator,
+          oldSchemaItems as S,
+          rootSchema,
+          data as T,
+          experimental_customMergeAllOf
+        );
       }
       if (has(newSchemaItems, REF_KEY)) {
-        newSchemaItems = retrieveSchema<T, S, F>(validator, newSchemaItems as S, rootSchema, data as T);
+        newSchemaItems = retrieveSchema<T, S, F>(
+          validator,
+          newSchemaItems as S,
+          rootSchema,
+          data as T,
+          experimental_customMergeAllOf
+        );
       }
       // Now get types and see if they are the same
       const oldSchemaType = get(oldSchemaItems, 'type');

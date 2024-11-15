@@ -15,6 +15,7 @@ import retrieveSchema from './retrieveSchema';
  * @param schema - The schema for which check for array of files flag is desired
  * @param [uiSchema={}] - The UI schema from which to check the widget
  * @param [rootSchema] - The root schema, used to primarily to look up `$ref`s
+ * @param [experimental_customMergeAllOf] - Optional function that allows for custom merging of `allOf` schemas
  * @returns - True if schema/uiSchema contains an array of files, otherwise false
  */
 export default function isFilesArray<T = any, S extends StrictRJSFSchema = RJSFSchema, F extends FormContextType = any>(

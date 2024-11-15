@@ -22,6 +22,7 @@ import isMultiSelect from './isMultiSelect';
  * @param [uiSchema={}] - The UI schema from which to derive potentially displayable information
  * @param [rootSchema] - The root schema, used to primarily to look up `$ref`s
  * @param [globalOptions={}] - The optional Global UI Schema from which to get any fallback `xxx` options
+ * @param [experimental_customMergeAllOf] - Optional function that allows for custom merging of `allOf` schemas
  * @returns - True if the label should be displayed or false if it should not
  */
 export default function getDisplayLabel<
